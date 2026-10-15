@@ -28,12 +28,55 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* Gallery: dynamic rendering, filtering and lightbox with pagination */
+  const STORAGE_KEY = 'apmGalleryProjects';
   const filters = document.querySelectorAll('.filter-btn');
   const galleryGrid = document.querySelector('.gallery-grid');
   const loadMoreBtn = document.getElementById('loadMoreBtn');
 
+  function getPersistedGalleryData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+    } catch (error) {
+      console.warn('Could not load gallery data from localStorage:', error);
+      return [];
+    }
+  }
+
+  function savePersistedGalleryData(items) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    } catch (error) {
+      console.warn('Could not save gallery data to localStorage:', error);
+    }
+  }
+
+  function mergeGalleryData(defaultItems, persistedItems) {
+    const merged = Array.isArray(defaultItems) ? defaultItems.slice() : [];
+    const persisted = Array.isArray(persistedItems) ? persistedItems : [];
+
+    persisted.forEach(item => {
+      if (!item) return;
+      const alreadyExists = merged.some(existing => {
+        const sameId = existing && item && existing.id && item.id && String(existing.id) === String(item.id);
+        const sameContent = existing && item && existing.title === item.title && existing.location === item.location && existing.date === item.date;
+        return sameId || sameContent;
+      });
+
+      if (!alreadyExists) merged.push(item);
+    });
+
+    return merged;
+  }
+
+  const defaultGalleryData = Array.isArray(window.galleryData) ? window.galleryData : [];
+  const persistedGalleryData = getPersistedGalleryData();
+  window.galleryData = mergeGalleryData(defaultGalleryData, persistedGalleryData);
+
   const data = window.galleryData || [];
-  const pageSize = 9; // show 9 items initially
+  const pageSize = 6; // initial visible project count
   let currentPage = 1;
   let currentFilter = 'all';
 
@@ -61,9 +104,14 @@ document.addEventListener('DOMContentLoaded', function () {
       `;
     }).join('');
 
-    // Show or hide Load More button
-    if (filtered.length > pageItems.length) loadMoreBtn.style.display = '';
-    else loadMoreBtn.style.display = 'none';
+    if (loadMoreBtn) {
+      const hasMore = filtered.length > pageItems.length;
+      loadMoreBtn.classList.toggle('hidden', !hasMore);
+      loadMoreBtn.classList.toggle('opacity-0', !hasMore);
+      loadMoreBtn.classList.toggle('pointer-events-none', !hasMore);
+      loadMoreBtn.style.transition = 'opacity 0.25s ease';
+      loadMoreBtn.style.opacity = hasMore ? '1' : '0';
+    }
 
     attachItemHandlers();
   }
@@ -99,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (loadMoreBtn) {
     loadMoreBtn.addEventListener('click', function () {
-      currentPage++;
+      currentPage += 1;
       renderGallery();
     });
   }
@@ -216,16 +264,19 @@ document.addEventListener('DOMContentLoaded', function () {
         imageUrl: imageUrl
       };
 
-      // Ensure galleryData exists
-      window.galleryData = window.galleryData || [];
-      window.galleryData.unshift(newItem); // add to start
+      const storedProjects = getPersistedGalleryData();
+      const updatedProjects = [newItem, ...storedProjects];
+      savePersistedGalleryData(updatedProjects);
+
+      const mergedData = mergeGalleryData(defaultGalleryData, updatedProjects);
+      window.galleryData = mergedData;
 
       // Reset filters and render so the new item is visible
       currentFilter = 'all';
       currentPage = Math.ceil(getFilteredData().length / pageSize);
       renderGallery();
 
-      adminMsg.textContent = 'Project added to gallery.';
+      adminMsg.textContent = 'Project added to gallery and saved locally.';
       adminForm.reset();
       adminPreview.classList.add('hidden');
       adminImageDataUrl = null;
