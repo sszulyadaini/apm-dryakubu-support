@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const filters = document.querySelectorAll('.filter-btn');
   const galleryGrid = document.querySelector('.gallery-grid');
   const loadMoreBtn = document.getElementById('loadMoreBtn');
+  const galleryCount = document.getElementById('galleryCount');
 
   function getPersistedGalleryData() {
     try {
@@ -76,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.galleryData = mergeGalleryData(defaultGalleryData, persistedGalleryData);
 
   const data = window.galleryData || [];
-  const pageSize = 6; // initial visible project count
+  const pageSize = 10;
   let currentPage = 1;
   let currentFilter = 'all';
 
@@ -87,8 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function renderGallery() {
     const filtered = getFilteredData();
-    const showCount = currentPage * pageSize;
-    const pageItems = filtered.slice(0, showCount);
+    const visibleCount = Math.min(filtered.length, currentPage * pageSize);
+    const pageItems = filtered.slice(0, visibleCount);
 
     galleryGrid.innerHTML = pageItems.map(item => {
       return `
@@ -104,6 +105,10 @@ document.addEventListener('DOMContentLoaded', function () {
       `;
     }).join('');
 
+    if (galleryCount) {
+      galleryCount.textContent = `Showing ${pageItems.length} of ${filtered.length} projects`;
+    }
+
     if (loadMoreBtn) {
       const hasMore = filtered.length > pageItems.length;
       loadMoreBtn.classList.toggle('hidden', !hasMore);
@@ -111,6 +116,8 @@ document.addEventListener('DOMContentLoaded', function () {
       loadMoreBtn.classList.toggle('pointer-events-none', !hasMore);
       loadMoreBtn.style.transition = 'opacity 0.25s ease';
       loadMoreBtn.style.opacity = hasMore ? '1' : '0';
+      loadMoreBtn.disabled = !hasMore;
+      loadMoreBtn.setAttribute('aria-label', hasMore ? 'Load more projects' : 'No more projects to load');
     }
 
     attachItemHandlers();
@@ -201,87 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Initial render
   renderGallery();
-
-  // --- Admin form: add new projects client-side ---
-  const adminForm = document.getElementById('adminForm');
-  const adminPreviewBtn = document.getElementById('adminPreviewBtn');
-  const adminPreview = document.getElementById('adminPreview');
-  const adminPreviewImg = document.getElementById('adminPreviewImg');
-  const adminMsg = document.getElementById('adminMsg');
-  const projImageFile = document.getElementById('projImageFile');
-
-  // Holds the data URL of the selected image file for admin preview/submission
-  let adminImageDataUrl = null;
-
-  function clearAdminMsg() { adminMsg.textContent = ''; }
-
-  // Preview from selected file (FileReader)
-  if (projImageFile) {
-    projImageFile.addEventListener('change', function (e) {
-      const file = e.target.files && e.target.files[0];
-      if (!file) {
-        adminMsg.textContent = 'No file selected.';
-        return;
-      }
-      if (!file.type.startsWith('image/')) {
-        adminMsg.textContent = 'Please select a valid image file.';
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = function (ev) {
-        adminImageDataUrl = ev.target.result;
-        adminPreviewImg.src = adminImageDataUrl;
-        adminPreview.classList.remove('hidden');
-        clearAdminMsg();
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  if (adminForm) {
-    adminForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const title = document.getElementById('projTitle').value.trim();
-      const category = document.getElementById('projCategory').value;
-      const location = document.getElementById('projLocation').value.trim();
-      const date = document.getElementById('projDate').value;
-      const description = document.getElementById('projDesc').value.trim();
-      // Use selected file data URL if available, otherwise fallback to placeholder
-      const imageUrl = adminImageDataUrl || 'https://via.placeholder.com/1200x800?text=No+Image';
-
-      if (!title || !location || !date) {
-        adminMsg.textContent = 'Please fill required fields: Title, Location, Date.';
-        return;
-      }
-
-      const newItem = {
-        id: Date.now(),
-        category: category,
-        title: title,
-        location: location,
-        date: date,
-        description: description,
-        imageUrl: imageUrl
-      };
-
-      const storedProjects = getPersistedGalleryData();
-      const updatedProjects = [newItem, ...storedProjects];
-      savePersistedGalleryData(updatedProjects);
-
-      const mergedData = mergeGalleryData(defaultGalleryData, updatedProjects);
-      window.galleryData = mergedData;
-
-      // Reset filters and render so the new item is visible
-      currentFilter = 'all';
-      currentPage = Math.ceil(getFilteredData().length / pageSize);
-      renderGallery();
-
-      adminMsg.textContent = 'Project added to gallery and saved locally.';
-      adminForm.reset();
-      adminPreview.classList.add('hidden');
-      adminImageDataUrl = null;
-    });
-  }
 
   // --- Contact form handling ---
   const contactForm = document.getElementById('contactForm');

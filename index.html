@@ -157,7 +157,7 @@
 
             <!-- Card 5: Official Photographer -->
             <div class="team-card" role="group" aria-label="Official Photographer">
-              <img src="images-members/photographer.jpg" alt="Official Photographer photo" class="team-photo" loading="lazy" decoding="async">
+              <img src="images-members/Photographer.jpg" alt="Official Photographer photo" class="team-photo" loading="lazy" decoding="async">
               <div class="p-3 text-center">
                 <h4 class="font-semibold">Bello Adamu</h4>
                 <p class="text-sm text-gray-600">Official Photographer</p>
@@ -211,7 +211,10 @@
           <div class="mt-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 gallery-grid"></div>
             <div class="mt-6 text-center">
-              <button id="loadMoreBtn" class="px-5 py-3 rounded-lg bg-green-700 text-white font-semibold shadow-sm hover:bg-green-800 transition duration-200 ease-in-out opacity-100">Load More Projects</button>
+              <p id="galleryCount" class="mb-3 text-sm font-medium text-gray-600">Showing 0 of 0 projects</p>
+              <button id="loadMoreBtn" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-green-700 to-emerald-600 text-white font-semibold shadow-lg shadow-green-700/20 hover:from-green-800 hover:to-emerald-700 transition duration-200 ease-in-out opacity-100">
+                <span>Load More Projects</span>
+              </button>
             </div>
           </div>
         </div>
@@ -235,66 +238,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <!-- Admin: Upload New Project -->
-      <section id="admin" class="py-12 bg-white border-t">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6">
-          <h2 class="text-2xl font-semibold">Admin — Upload New Project</h2>
-          <p class="mt-2 text-sm text-gray-600">Use this form to add new projects to the gallery. Entries are added client-side for demo purposes.</p>
-
-          <form id="adminForm" class="mt-6 grid grid-cols-1 gap-4">
-            <div class="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label for="projTitle" class="block text-sm font-medium text-gray-700">Project Title</label>
-                <input id="projTitle" name="title" required class="mt-1 block w-full border rounded px-3 py-2" />
-              </div>
-
-              <div>
-                <label for="projCategory" class="block text-sm font-medium text-gray-700">Category</label>
-                <select id="projCategory" name="category" class="mt-1 block w-full border rounded px-3 py-2">
-                  <option value="karkara">Karkara (Rural)</option>
-                  <option value="birni">Birni (Urban)</option>
-                  <option value="empowerment">Empowerment</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label for="projLocation" class="block text-sm font-medium text-gray-700">Location</label>
-                <input id="projLocation" name="location" required class="mt-1 block w-full border rounded px-3 py-2" />
-              </div>
-
-              <div>
-                <label for="projDate" class="block text-sm font-medium text-gray-700">Date</label>
-                <input id="projDate" name="date" type="date" required class="mt-1 block w-full border rounded px-3 py-2" />
-              </div>
-            </div>
-
-            <div>
-              <label for="projDesc" class="block text-sm font-medium text-gray-700">Description</label>
-              <textarea id="projDesc" name="description" rows="3" class="mt-1 block w-full border rounded px-3 py-2"></textarea>
-            </div>
-
-            <div>
-              <label for="projImageFile" class="block text-sm font-medium text-gray-700">Project Image</label>
-              <input id="projImageFile" name="imageFile" type="file" accept="image/*" class="mt-1 block w-full border rounded px-3 py-2" />
-              <p class="text-xs text-gray-500 mt-1">Choose an image file from your device. A preview will appear below.</p>
-            </div>
-
-            <div class="flex items-center gap-4">
-              <button type="submit" class="px-4 py-2 rounded bg-green-600 text-white">Add Project</button>
-              <button type="button" id="adminPreviewBtn" class="px-4 py-2 rounded border">Preview Image</button>
-              <span id="adminMsg" class="text-sm text-green-600"></span>
-            </div>
-
-            <div id="adminPreview" class="mt-4 hidden">
-              <h4 class="font-semibold">Image Preview</h4>
-              <img id="adminPreviewImg" src="" alt="Preview image" class="mt-2 w-full max-h-64 object-contain border" loading="lazy" decoding="async" />
-            </div>
-          </form>
         </div>
       </section>
 
@@ -365,7 +308,7 @@
               <div class="mt-6">
                 <h4 class="font-semibold">Office</h4>
                 <p class="mt-2 text-gray-700">APM Support Group HQ — Birni City</p>
-                <p class="text-gray-600">Phone: +234 800 000 0000</p>
+                <p class="text-gray-600">Phone: +234 803 286 1931</p>
               </div>
             </div>
           </div>
