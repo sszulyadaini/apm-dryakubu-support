@@ -78,8 +78,9 @@ document.addEventListener('DOMContentLoaded', function () {
   let lightboxItems = [];
   let currentLightboxIndex = -1;
 
+  const featuredGalleryData = Array.isArray(window.featuredGalleryData) ? window.featuredGalleryData.slice() : [];
   const allGalleryData = Array.isArray(window.galleryData) ? window.galleryData.slice() : [];
-  const data = allGalleryData.slice(0, FEATURED_SLIDER_LIMIT);
+  const data = featuredGalleryData.length ? featuredGalleryData.slice(0, FEATURED_SLIDER_LIMIT) : [];
   const teamMembers = [
     { id: 1, name: 'Sulaiman Salihu Zulyadaini', role: 'Chairman', image: 'images-members/chairman.jpg' },
     { id: 2, name: 'Umar Idris Muhammad', role: 'Vice Chairman', image: 'images-members/vice-chairman.jpg' },
