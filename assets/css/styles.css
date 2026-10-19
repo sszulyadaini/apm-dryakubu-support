@@ -10,6 +10,17 @@
 .brand-blue { color: var(--apm-blue); }
 .brand-green { color: var(--apm-green); }
 
+html, body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: contain;
+}
+
 .site-header {
   background: var(--apm-white);
 }
@@ -63,6 +74,7 @@
   transform-style: preserve-3d;
   touch-action: pan-y;
   user-select: none;
+  contain: layout paint;
 }
 
 .gallery-slider {
@@ -89,6 +101,7 @@
   transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease;
   will-change: transform, opacity;
   filter: saturate(0.82) brightness(0.9);
+  contain: layout paint;
 }
 
 .gallery-card.is-active {
@@ -184,6 +197,15 @@
 #lightbox { display: none; }
 #lightbox.flex { display: flex; }
 #lightboxImage { background: #f8fafc; }
+
+#fullGalleryModal { display: none; }
+#fullGalleryModal.flex { display: flex; }
+#fullGalleryGrid .full-gallery-item { position: relative; overflow: hidden; border-radius: 1rem; border: 1px solid rgba(15, 23, 42, 0.08); background: #f8fafc; box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08); transition: transform 0.2s ease, box-shadow 0.2s ease; contain: layout paint; }
+#fullGalleryGrid .full-gallery-item:hover { transform: translateY(-4px); box-shadow: 0 16px 28px rgba(15, 23, 42, 0.12); }
+#fullGalleryGrid img { display: block; width: 100%; height: 180px; object-fit: cover; }
+#fullGalleryGrid .full-gallery-caption { padding: 0.75rem; }
+#fullGalleryGrid .full-gallery-caption h4 { font-size: 0.9rem; font-weight: 700; color: #0f172a; }
+#fullGalleryGrid .full-gallery-caption p { margin-top: 0.25rem; font-size: 0.72rem; color: #475569; }
 
 /* Contact & volunteer modal styles */
 #contactForm input, #contactForm textarea { background: #fff; }
