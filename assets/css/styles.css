@@ -28,6 +28,10 @@ html {
   touch-action: pan-y !important;
 }
 
+body.lightbox-open {
+  overflow: hidden;
+}
+
 .site-header {
   background: var(--apm-white);
 }
@@ -80,6 +84,7 @@ html {
   perspective: 1400px;
   transform-style: preserve-3d;
   touch-action: pan-y;
+  -webkit-user-select: none;
   user-select: none;
   contain: layout paint;
 }

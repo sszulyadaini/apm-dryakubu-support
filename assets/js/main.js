@@ -173,8 +173,8 @@ document.addEventListener('DOMContentLoaded', function () {
     window.__prevActiveEl = document.activeElement;
     document.body.classList.add('lightbox-open');
     document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'manipulation';
-    document.documentElement.style.touchAction = 'manipulation';
+    document.body.style.touchAction = 'pan-y';
+    document.documentElement.style.touchAction = 'pan-y';
     lightbox.classList.remove('hidden');
     lightbox.classList.add('flex');
   }
@@ -325,8 +325,8 @@ document.addEventListener('DOMContentLoaded', function () {
         window.__prevActiveEl = document.activeElement;
         document.body.classList.add('lightbox-open');
         document.body.style.overflow = 'hidden';
-        document.body.style.touchAction = 'manipulation';
-        document.documentElement.style.touchAction = 'manipulation';
+        document.body.style.touchAction = 'pan-y';
+        document.documentElement.style.touchAction = 'pan-y';
         lightbox.classList.remove('hidden');
         lightbox.classList.add('flex');
       });
