@@ -1969,5 +1969,221 @@ window.galleryData = [
     "date": "2026-07-01",
     "description": "APM Community Project",
     "imageUrl": "images/optimized/IMG_20260911_130222.webp"
+  },
+  {
+    "id": 220,
+    "category": "karkara",
+    "title": "Project 220",
+    "location": "Karkara Community",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20260911_130227.webp"
+  },
+  {
+    "id": 221,
+    "category": "birni",
+    "title": "Project 221",
+    "location": "Birni City",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20260911_130355.webp"
+  },
+  {
+    "id": 222,
+    "category": "empowerment",
+    "title": "Project 222",
+    "location": "Community Outreach",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20260911_130356.webp"
+  },
+  {
+    "id": 223,
+    "category": "karkara",
+    "title": "Project 223",
+    "location": "Karkara Community",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20260911_130358.webp"
+  },
+  {
+    "id": 224,
+    "category": "birni",
+    "title": "Project 224",
+    "location": "Birni City",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20260911_130516.webp"
+  },
+  {
+    "id": 225,
+    "category": "empowerment",
+    "title": "Project 225",
+    "location": "Community Outreach",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20260911_130522.webp"
+  },
+  {
+    "id": 226,
+    "category": "karkara",
+    "title": "Project 226",
+    "location": "Karkara Community",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_103926.webp"
+  },
+  {
+    "id": 227,
+    "category": "birni",
+    "title": "Project 227",
+    "location": "Birni City",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_103927.webp"
+  },
+  {
+    "id": 228,
+    "category": "empowerment",
+    "title": "Project 228",
+    "location": "Community Outreach",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_103929.webp"
+  },
+  {
+    "id": 229,
+    "category": "karkara",
+    "title": "Project 229",
+    "location": "Karkara Community",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_103930.webp"
+  },
+  {
+    "id": 230,
+    "category": "birni",
+    "title": "Project 230",
+    "location": "Birni City",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_103932.webp"
+  },
+  {
+    "id": 231,
+    "category": "empowerment",
+    "title": "Project 231",
+    "location": "Community Outreach",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_103934.webp"
+  },
+  {
+    "id": 232,
+    "category": "karkara",
+    "title": "Project 232",
+    "location": "Karkara Community",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_103935.webp"
+  },
+  {
+    "id": 233,
+    "category": "birni",
+    "title": "Project 233",
+    "location": "Birni City",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_103936.webp"
+  },
+  {
+    "id": 234,
+    "category": "empowerment",
+    "title": "Project 234",
+    "location": "Community Outreach",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_103937.webp"
+  },
+  {
+    "id": 235,
+    "category": "karkara",
+    "title": "Project 235",
+    "location": "Karkara Community",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_110929.webp"
+  },
+  {
+    "id": 236,
+    "category": "birni",
+    "title": "Project 236",
+    "location": "Birni City",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_110933.webp"
+  },
+  {
+    "id": 237,
+    "category": "empowerment",
+    "title": "Project 237",
+    "location": "Community Outreach",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_110934.webp"
+  },
+  {
+    "id": 238,
+    "category": "karkara",
+    "title": "Project 238",
+    "location": "Karkara Community",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_110936.webp"
+  },
+  {
+    "id": 239,
+    "category": "birni",
+    "title": "Project 239",
+    "location": "Birni City",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_110944.webp"
+  },
+  {
+    "id": 240,
+    "category": "empowerment",
+    "title": "Project 240",
+    "location": "Community Outreach",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_110955.webp"
+  },
+  {
+    "id": 241,
+    "category": "karkara",
+    "title": "Project 241",
+    "location": "Karkara Community",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_111123.webp"
+  },
+  {
+    "id": 242,
+    "category": "birni",
+    "title": "Project 242",
+    "location": "Birni City",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_111125.webp"
+  },
+  {
+    "id": 243,
+    "category": "empowerment",
+    "title": "Project 243",
+    "location": "Community Outreach",
+    "date": "2026-07-01",
+    "description": "APM Community Project",
+    "imageUrl": "images/optimized/IMG_20261006_111131.webp"
   }
 ];

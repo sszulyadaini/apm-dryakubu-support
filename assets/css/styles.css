@@ -12,6 +12,7 @@
 
 html, body {
   overflow-x: hidden;
+  overflow-y: auto !important;
   scroll-behavior: smooth;
 }
 
@@ -19,6 +20,10 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: contain;
+}
+
+html {
+  overflow-y: auto !important;
 }
 
 .site-header {
@@ -194,9 +199,23 @@ body {
 .gallery-filters .filter-btn { cursor: pointer; }
 
 /* Lightbox tweaks */
-#lightbox { display: none; }
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+}
 #lightbox.flex { display: flex; }
+#lightbox .rounded-lg {
+  position: relative;
+  z-index: 10000;
+}
+#lightbox button {
+  position: relative;
+  z-index: 10001;
+}
 #lightboxImage { background: #f8fafc; }
+body.lightbox-open { overflow: hidden; }
 
 #fullGalleryModal { display: none; }
 #fullGalleryModal.flex { display: flex; }
