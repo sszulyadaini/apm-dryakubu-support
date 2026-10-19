@@ -75,6 +75,15 @@ document.addEventListener('DOMContentLoaded', function () {
     return String(str).replace(/[&<>"']/g, function (s) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s]; });
   }
 
+  function getOptimizedImageUrl(imageUrl) {
+    if (!imageUrl) return '';
+    const value = String(imageUrl).trim();
+    if (!value) return '';
+    if (value.startsWith('images/optimized/')) return value;
+    if (value.startsWith('images/')) return value.replace(/^images\//, 'images/optimized/');
+    return value;
+  }
+
   function renderFullGallery() {
     if (!fullGalleryGrid) return;
 
@@ -97,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const location = escapeHtml(item.location || 'Community');
       return `
         <button type="button" class="full-gallery-item text-left" data-gallery-item-index="${startIndex + index}" aria-label="Open ${title}">
-          <img src="${item.imageUrl}" alt="${title}" loading="lazy" decoding="async" />
+          <img src="${getOptimizedImageUrl(item.imageUrl)}" alt="${title}" loading="lazy" decoding="async" />
           <div class="full-gallery-caption">
             <h4>${title}</h4>
             <p>${location}</p>
@@ -130,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!lightbox || !lbImage || !lbTitle || !lbMeta || !lbDesc) return;
 
-        lbImage.src = selected.imageUrl;
+        lbImage.src = getOptimizedImageUrl(selected.imageUrl);
         lbTitle.textContent = selected.title || 'Project';
         lbMeta.textContent = `${selected.location || 'Community'} — ${selected.date || ''}`;
         lbDesc.textContent = selected.description || 'Project photo';
@@ -205,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return `
         <article class="gallery-card ${offset === 0 ? 'is-active' : ''}" data-id="${item.id}" data-category="${item.category}" data-title="${title}" data-location="${location}" data-date="${date}" data-description="${escapeHtml(item.description)}" style="transform: translateX(${translateX}px) rotateY(${rotateY}deg) scale(${scale}); opacity: ${opacity}; z-index: ${zIndex};">
           <button class="gallery-card-button" type="button" aria-label="Open ${title}">
-            <img src="${item.imageUrl}" alt="${title}" loading="lazy" decoding="async" />
+            <img src="${getOptimizedImageUrl(item.imageUrl)}" alt="${title}" loading="lazy" decoding="async" />
             <div class="gallery-card-body">
               <span class="gallery-tag">${tag}</span>
               <h3>${title}</h3>

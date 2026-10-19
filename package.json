@@ -1,0 +1,25 @@
+{
+  "name": "apm",
+  "version": "1.0.0",
+  "description": "Simple responsive site scaffold using Tailwind CSS (CDN) and APM color variables.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "optimize:gallery": "node scripts/optimize-gallery-images.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sszulyadaini/apm-dryakubu-support.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sszulyadaini/apm-dryakubu-support/issues"
+  },
+  "homepage": "https://github.com/sszulyadaini/apm-dryakubu-support#readme",
+  "devDependencies": {
+    "sharp": "^0.35.5"
+  }
+}
