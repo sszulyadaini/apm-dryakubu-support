@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
+  document.documentElement.style.touchAction = 'pan-y';
+  document.documentElement.style.overflowY = 'auto';
+  document.body.style.touchAction = 'pan-y';
+  document.body.style.overflowY = 'auto';
+
   const btn = document.getElementById('mobileMenuButton');
   const menu = document.getElementById('mobileMenu');
 
@@ -168,6 +173,8 @@ document.addEventListener('DOMContentLoaded', function () {
     window.__prevActiveEl = document.activeElement;
     document.body.classList.add('lightbox-open');
     document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'manipulation';
+    document.documentElement.style.touchAction = 'manipulation';
     lightbox.classList.remove('hidden');
     lightbox.classList.add('flex');
   }
@@ -178,6 +185,8 @@ document.addEventListener('DOMContentLoaded', function () {
     lightbox.classList.remove('flex');
     document.body.classList.remove('lightbox-open');
     document.body.style.overflow = 'auto';
+    document.body.style.touchAction = 'pan-y';
+    document.documentElement.style.touchAction = 'pan-y';
     lightboxItems = [];
     currentLightboxIndex = -1;
     if (window.__prevActiveEl && typeof window.__prevActiveEl.focus === 'function') {
@@ -316,6 +325,8 @@ document.addEventListener('DOMContentLoaded', function () {
         window.__prevActiveEl = document.activeElement;
         document.body.classList.add('lightbox-open');
         document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'manipulation';
+        document.documentElement.style.touchAction = 'manipulation';
         lightbox.classList.remove('hidden');
         lightbox.classList.add('flex');
       });
