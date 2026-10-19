@@ -290,17 +290,154 @@ body.lightbox-open { overflow: hidden; }
 /* Ensure interactive elements show clear focus */
 a:focus, button:focus, input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px rgba(0,85,165,0.12); }
 
-/* Leadership team cards */
-.team-grid { gap: 1.25rem; }
-.team-card { background: #ffffff; border-radius: 8px; overflow: hidden; transition: transform .16s ease, box-shadow .16s ease; border: 1px solid rgba(0,0,0,0.04); }
-.team-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
-.team-photo { width: 150px; height: 150px; object-fit: cover; display: block; margin: 0 auto; border-radius: 9999px; }
-/* Ensure team card layout centers the portrait */
-.team-card .p-3 { text-align: center; }
-.team-card h4 { color: var(--apm-blue); }
-.team-card p { color: #475569; }
-.team-social .social-link { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.06); color: var(--apm-blue); background: transparent; text-decoration: none; font-weight: 600; }
-.team-social .social-link:hover { background: linear-gradient(90deg, var(--apm-green), var(--apm-blue)); color: white; transform: translateY(-3px); }
+/* Leadership team 3D slider */
+.team-slider-shell {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.team-slider-viewport {
+  position: relative;
+  height: 420px;
+  overflow: hidden;
+  perspective: 1400px;
+  transform-style: preserve-3d;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+  contain: layout paint;
+}
+
+.team-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.35s ease;
+}
+
+.team-slider-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(70vw, 250px);
+  height: 350px;
+  margin-left: -125px;
+  margin-top: -175px;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.18);
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease;
+  will-change: transform, opacity;
+  filter: saturate(0.9) brightness(0.96);
+  contain: layout paint;
+}
+
+.team-slider-card.is-active {
+  box-shadow: 0 32px 80px rgba(0, 87, 78, 0.22);
+  filter: saturate(1.05) brightness(1);
+}
+
+.team-slider-image-wrap {
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.team-slider-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.team-slider-body {
+  padding: 1rem 1rem 1.1rem;
+  text-align: center;
+}
+
+.team-slider-body h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--apm-blue);
+}
+
+.team-slider-body p {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+#teamActiveDetails {
+  background: rgba(255,255,255,0.9);
+}
+
+#teamActiveName {
+  color: var(--apm-blue);
+}
+
+#teamActiveRole {
+  color: #475569;
+}
+
+.team-slider-nav-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.9);
+  color: var(--apm-blue);
+  font-size: 1.5rem;
+  line-height: 1;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.team-slider-nav-btn:hover {
+  background: linear-gradient(135deg, var(--apm-green), var(--apm-blue));
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(0, 87, 78, 0.18);
+}
+
+@media (max-width: 640px) {
+  .team-slider-shell {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .team-slider-viewport {
+    height: 360px;
+  }
+
+  .team-slider-card {
+    width: min(75vw, 220px);
+    height: 300px;
+    margin-left: -110px;
+    margin-top: -150px;
+  }
+
+  .team-slider-image-wrap {
+    height: 200px;
+  }
+
+  .team-slider-nav {
+    display: flex;
+    justify-content: center;
+  }
+
+  .team-slider-nav-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 1.25rem;
+  }
+}
 
 
 

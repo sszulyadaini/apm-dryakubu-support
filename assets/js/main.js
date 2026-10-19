@@ -49,6 +49,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const galleryViewport = document.querySelector('.gallery-slider-viewport');
   const galleryPrev = document.getElementById('galleryPrev');
   const galleryNext = document.getElementById('galleryNext');
+  const teamSlider = document.getElementById('teamSlider');
+  const teamViewport = document.querySelector('.team-slider-viewport');
+  const teamPrev = document.getElementById('teamPrev');
+  const teamNext = document.getElementById('teamNext');
+  const teamActiveName = document.getElementById('teamActiveName');
+  const teamActiveRole = document.getElementById('teamActiveRole');
   const galleryCount = document.getElementById('galleryCount');
   const galleryActiveDetails = document.getElementById('galleryActiveDetails');
   const openFullGallery = document.getElementById('openFullGallery');
@@ -74,8 +80,59 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const allGalleryData = Array.isArray(window.galleryData) ? window.galleryData.slice() : [];
   const data = allGalleryData.slice(0, FEATURED_SLIDER_LIMIT);
+  const teamMembers = [
+    { id: 1, name: 'Sulaiman Salihu Zulyadaini', role: 'Chairman', image: 'images-members/chairman.jpg' },
+    { id: 2, name: 'Umar Idris Muhammad', role: 'Vice Chairman', image: 'images-members/vice-chairman.jpg' },
+    { id: 3, name: 'Umar Salisu Aliyu', role: 'Secretary', image: 'images-members/secretary.jpg' },
+    { id: 4, name: 'Almustapha Zurkallaini', role: 'P.R.O', image: 'images-members/pro.jpg' },
+    { id: 5, name: 'Bello Adamu', role: 'Official Photographer', image: 'images-members/Photographer.jpg' }
+  ];
   let currentFilter = 'all';
   let currentIndex = 0;
+  let teamIndex = 0;
+
+  function updateTeamActiveDetails() {
+    const activeMember = teamMembers[teamIndex];
+    if (!activeMember) return;
+
+    if (teamActiveName) teamActiveName.textContent = activeMember.name;
+    if (teamActiveRole) teamActiveRole.textContent = activeMember.role;
+  }
+
+  function renderTeamSlider() {
+    if (!teamSlider || !teamMembers.length) return;
+
+    teamSlider.innerHTML = teamMembers.map((member, index) => {
+      const offset = index - teamIndex;
+      const absOffset = Math.abs(offset);
+      const normalizedOffset = Math.max(-2, Math.min(2, offset));
+      const translateX = normalizedOffset * 165;
+      const rotateY = normalizedOffset * -30;
+      const scale = offset === 0 ? 1.08 : 1 - absOffset * 0.12;
+      const opacity = offset === 0 ? 1 : Math.max(0.2, 1 - absOffset * 0.28);
+      const zIndex = 100 - absOffset;
+
+      return `
+        <article class="team-slider-card ${offset === 0 ? 'is-active' : ''}" data-id="${member.id}" style="transform: translateX(${translateX}px) rotateY(${rotateY}deg) scale(${scale}); opacity: ${opacity}; z-index: ${zIndex};">
+          <div class="team-slider-image-wrap">
+            <img src="${member.image}" alt="${member.name}" loading="lazy" decoding="async" />
+          </div>
+          <div class="team-slider-body">
+            <h3>${member.name}</h3>
+            <p>${member.role}</p>
+          </div>
+        </article>
+      `;
+    }).join('');
+
+    updateTeamActiveDetails();
+  }
+
+  function moveTeamSlider(step) {
+    if (!teamMembers.length) return;
+    teamIndex = (teamIndex + step + teamMembers.length) % teamMembers.length;
+    renderTeamSlider();
+  }
 
   function getFilteredData() {
     if (currentFilter === 'all') return data.slice();
@@ -362,6 +419,51 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  if (teamPrev) {
+    teamPrev.addEventListener('click', function () {
+      moveTeamSlider(-1);
+    });
+  }
+
+  if (teamNext) {
+    teamNext.addEventListener('click', function () {
+      moveTeamSlider(1);
+    });
+  }
+
+  if (teamViewport) {
+    let teamTouchStartX = 0;
+    let teamTouchStartY = 0;
+    let teamTouchDeltaX = 0;
+
+    teamViewport.addEventListener('pointerdown', function (event) {
+      teamTouchStartX = event.clientX;
+      teamTouchStartY = event.clientY;
+      teamTouchDeltaX = 0;
+    }, { passive: true });
+
+    teamViewport.addEventListener('pointermove', function (event) {
+      if (!teamTouchStartX) return;
+      teamTouchDeltaX = event.clientX - teamTouchStartX;
+    }, { passive: true });
+
+    teamViewport.addEventListener('pointerup', function (event) {
+      const deltaY = event.clientY - teamTouchStartY;
+      if (Math.abs(teamTouchDeltaX) > 50 && Math.abs(teamTouchDeltaX) > Math.abs(deltaY)) {
+        moveTeamSlider(teamTouchDeltaX < 0 ? 1 : -1);
+      }
+      teamTouchStartX = 0;
+      teamTouchStartY = 0;
+      teamTouchDeltaX = 0;
+    });
+
+    teamViewport.addEventListener('pointerleave', function () {
+      teamTouchStartX = 0;
+      teamTouchStartY = 0;
+      teamTouchDeltaX = 0;
+    });
+  }
+
   if (openFullGallery) {
     openFullGallery.addEventListener('click', openFullGalleryModal);
   }
@@ -470,6 +572,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   renderGallery();
+  renderTeamSlider();
 
   // --- Contact form handling ---
   const contactForm = document.getElementById('contactForm');
