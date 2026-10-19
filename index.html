@@ -208,13 +208,26 @@
             <button data-filter="empowerment" class="filter-btn px-3 py-1 rounded bg-white border">Empowerment</button>
           </div>
 
-          <div class="mt-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 gallery-grid"></div>
-            <div class="mt-6 text-center">
-              <p id="galleryCount" class="mb-3 text-sm font-medium text-gray-600">Showing 0 of 0 projects</p>
-              <button id="loadMoreBtn" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-green-700 to-emerald-600 text-white font-semibold shadow-lg shadow-green-700/20 hover:from-green-800 hover:to-emerald-700 transition duration-200 ease-in-out opacity-100">
-                <span>Load More Projects</span>
-              </button>
+          <div class="mt-8 gallery-carousel-shell">
+            <div class="gallery-nav">
+              <button id="galleryPrev" type="button" class="gallery-nav-btn" aria-label="Previous project">&#8592;</button>
+            </div>
+
+            <div class="gallery-slider-viewport">
+              <div id="gallerySlider" class="gallery-slider" aria-live="polite"></div>
+            </div>
+
+            <div class="gallery-nav">
+              <button id="galleryNext" type="button" class="gallery-nav-btn" aria-label="Next project">&#8594;</button>
+            </div>
+          </div>
+
+          <div class="mt-6 text-center">
+            <p id="galleryCount" class="mb-3 text-sm font-medium text-gray-600">Showing 0 of 0 projects</p>
+            <div id="galleryActiveDetails" class="mx-auto max-w-2xl rounded-2xl border border-gray-200 bg-white p-4 text-left shadow-sm">
+              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-green-700">Featured project</p>
+              <h3 class="mt-2 text-xl font-bold text-gray-900">Waiting for projects…</h3>
+              <p class="mt-2 text-sm text-gray-600">The active project details will appear here as the carousel rotates.</p>
             </div>
           </div>
         </div>
@@ -316,6 +329,7 @@
       </section>
     </main>
 
+    <script src="assets/js/gallery-data.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
       (function(){

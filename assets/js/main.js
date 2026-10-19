@@ -27,78 +27,85 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* Gallery: dynamic rendering, filtering and lightbox with pagination */
-  const STORAGE_KEY = 'apmGalleryProjects';
+  /* Gallery: dynamic rendering, filtering and 3D carousel */
   const filters = document.querySelectorAll('.filter-btn');
-  const galleryGrid = document.querySelector('.gallery-grid');
-  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  const gallerySlider = document.getElementById('gallerySlider');
+  const galleryViewport = document.querySelector('.gallery-slider-viewport');
+  const galleryPrev = document.getElementById('galleryPrev');
+  const galleryNext = document.getElementById('galleryNext');
   const galleryCount = document.getElementById('galleryCount');
+  const galleryActiveDetails = document.getElementById('galleryActiveDetails');
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchDeltaX = 0;
 
-  function getPersistedGalleryData() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
-    } catch (error) {
-      console.warn('Could not load gallery data from localStorage:', error);
-      return [];
-    }
-  }
-
-  function savePersistedGalleryData(items) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch (error) {
-      console.warn('Could not save gallery data to localStorage:', error);
-    }
-  }
-
-  function mergeGalleryData(defaultItems, persistedItems) {
-    const merged = Array.isArray(defaultItems) ? defaultItems.slice() : [];
-    const persisted = Array.isArray(persistedItems) ? persistedItems : [];
-
-    persisted.forEach(item => {
-      if (!item) return;
-      const alreadyExists = merged.some(existing => {
-        const sameId = existing && item && existing.id && item.id && String(existing.id) === String(item.id);
-        const sameContent = existing && item && existing.title === item.title && existing.location === item.location && existing.date === item.date;
-        return sameId || sameContent;
-      });
-
-      if (!alreadyExists) merged.push(item);
-    });
-
-    return merged;
-  }
-
-  const defaultGalleryData = Array.isArray(window.galleryData) ? window.galleryData : [];
-  const persistedGalleryData = getPersistedGalleryData();
-  window.galleryData = mergeGalleryData(defaultGalleryData, persistedGalleryData);
-
-  const data = window.galleryData || [];
-  const pageSize = 10;
-  let currentPage = 1;
+  const data = Array.isArray(window.galleryData) ? window.galleryData.slice() : [];
   let currentFilter = 'all';
+  let currentIndex = 0;
 
   function getFilteredData() {
     if (currentFilter === 'all') return data.slice();
     return data.filter(d => d.category === currentFilter);
   }
 
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (s) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s]; });
+  }
+
+  function updateActiveGalleryDetail(item) {
+    if (!galleryActiveDetails || !item) return;
+
+    const categoryLabel = item.category ? item.category.charAt(0).toUpperCase() + item.category.slice(1) : 'Project';
+    galleryActiveDetails.innerHTML = `
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-green-700">${escapeHtml(categoryLabel)}</p>
+      <h3 class="mt-2 text-xl font-bold text-gray-900">${escapeHtml(item.title)}</h3>
+      <p class="mt-2 text-sm text-gray-500">${escapeHtml(item.location)} • ${escapeHtml(item.date)}</p>
+      <p class="mt-3 text-sm text-gray-700">${escapeHtml(item.description)}</p>
+    `;
+  }
+
   function renderGallery() {
     const filtered = getFilteredData();
-    const visibleCount = Math.min(filtered.length, currentPage * pageSize);
-    const pageItems = filtered.slice(0, visibleCount);
 
-    galleryGrid.innerHTML = pageItems.map(item => {
+    if (!gallerySlider) return;
+
+    if (!filtered.length) {
+      gallerySlider.innerHTML = '<div class="gallery-empty-state">No projects available.</div>';
+      if (galleryCount) galleryCount.textContent = 'Showing 0 of 0 projects';
+      if (galleryActiveDetails) {
+        galleryActiveDetails.innerHTML = `
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-green-700">Featured project</p>
+          <h3 class="mt-2 text-xl font-bold text-gray-900">Waiting for projects…</h3>
+          <p class="mt-2 text-sm text-gray-600">The active project details will appear here as the carousel rotates.</p>
+        `;
+      }
+      return;
+    }
+
+    currentIndex = ((currentIndex % filtered.length) + filtered.length) % filtered.length;
+
+    gallerySlider.innerHTML = filtered.map((item, index) => {
+      const offset = index - currentIndex;
+      const absOffset = Math.abs(offset);
+      const normalizedOffset = Math.max(-2, Math.min(2, offset));
+      const translateX = normalizedOffset * 170;
+      const rotateY = normalizedOffset * -38;
+      const scale = offset === 0 ? 1.14 : 1 - absOffset * 0.12;
+      const opacity = offset === 0 ? 1 : Math.max(0.1, 1 - absOffset * 0.28);
+      const zIndex = 100 - absOffset;
+      const tag = escapeHtml(item.category);
+      const title = escapeHtml(item.title);
+      const location = escapeHtml(item.location);
+      const date = escapeHtml(item.date);
+
       return `
-        <article class="gallery-item rounded overflow-hidden shadow-sm" data-id="${item.id}" data-category="${item.category}" data-title="${escapeHtml(item.title)}" data-location="${escapeHtml(item.location)}" data-date="${item.date}" data-description="${escapeHtml(item.description)}">
-          <button class="w-full focus:outline-none" aria-label="Open ${escapeHtml(item.title)}">
-            <img src="${item.imageUrl}" alt="${escapeHtml(item.title)}" class="w-full h-48 object-cover" loading="lazy" decoding="async">
-            <div class="p-3 bg-white">
-              <h4 class="font-semibold">${escapeHtml(item.title)}</h4>
-              <p class="text-sm text-gray-600">${escapeHtml(item.location)} — ${item.date}</p>
+        <article class="gallery-card ${offset === 0 ? 'is-active' : ''}" data-id="${item.id}" data-category="${item.category}" data-title="${title}" data-location="${location}" data-date="${date}" data-description="${escapeHtml(item.description)}" style="transform: translateX(${translateX}px) rotateY(${rotateY}deg) scale(${scale}); opacity: ${opacity}; z-index: ${zIndex};">
+          <button class="gallery-card-button" type="button" aria-label="Open ${title}">
+            <img src="${item.imageUrl}" alt="${title}" loading="lazy" decoding="async" />
+            <div class="gallery-card-body">
+              <span class="gallery-tag">${tag}</span>
+              <h3>${title}</h3>
+              <p>${location} • ${date}</p>
             </div>
           </button>
         </article>
@@ -106,107 +113,123 @@ document.addEventListener('DOMContentLoaded', function () {
     }).join('');
 
     if (galleryCount) {
-      galleryCount.textContent = `Showing ${pageItems.length} of ${filtered.length} projects`;
+      galleryCount.textContent = `Showing ${filtered.length} of ${filtered.length} projects`;
     }
 
-    if (loadMoreBtn) {
-      const hasMore = filtered.length > pageItems.length;
-      loadMoreBtn.classList.toggle('hidden', !hasMore);
-      loadMoreBtn.classList.toggle('opacity-0', !hasMore);
-      loadMoreBtn.classList.toggle('pointer-events-none', !hasMore);
-      loadMoreBtn.style.transition = 'opacity 0.25s ease';
-      loadMoreBtn.style.opacity = hasMore ? '1' : '0';
-      loadMoreBtn.disabled = !hasMore;
-      loadMoreBtn.setAttribute('aria-label', hasMore ? 'Load more projects' : 'No more projects to load');
-    }
-
+    updateActiveGalleryDetail(filtered[currentIndex]);
     attachItemHandlers();
   }
 
-  function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, function (s) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s]; });
-  }
-
-  // Attach click handlers for dynamically rendered items
   function attachItemHandlers() {
-    const items = Array.from(document.querySelectorAll('.gallery-item'));
-    items.forEach((it, idx) => {
-      const btn = it.querySelector('button');
-      if (!btn) return;
-      btn.onclick = function () {
-        const visible = Array.from(document.querySelectorAll('.gallery-item'));
-        const index = visible.indexOf(it);
-        openLightbox(index);
-      };
+    const cards = Array.from(document.querySelectorAll('.gallery-card'));
+    cards.forEach(card => {
+      const button = card.querySelector('button');
+      if (!button) return;
+
+      button.addEventListener('click', function () {
+        const allItems = getFilteredData();
+        const selected = allItems.find(item => String(item.id) === String(card.dataset.id));
+        if (!selected) return;
+
+        const img = card.querySelector('img');
+        if (!img) return;
+
+        const lightbox = document.getElementById('lightbox');
+        const lbImage = document.getElementById('lightboxImage');
+        const lbTitle = document.getElementById('lightboxTitle');
+        const lbMeta = document.getElementById('lightboxMeta');
+        const lbDesc = document.getElementById('lightboxDesc');
+
+        if (!lightbox || !lbImage || !lbTitle || !lbMeta || !lbDesc) return;
+
+        lbImage.src = img.src;
+        lbTitle.textContent = selected.title;
+        lbMeta.textContent = `${selected.location} — ${selected.date}`;
+        lbDesc.textContent = selected.description;
+        window.__prevActiveEl = document.activeElement;
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+      });
     });
   }
 
-  // Filters
   filters.forEach(btn => {
     btn.addEventListener('click', function () {
       currentFilter = btn.getAttribute('data-filter');
-      currentPage = 1;
+      currentIndex = 0;
       filters.forEach(b => b.classList.remove('ring-2', 'ring-offset-2'));
       btn.classList.add('ring-2', 'ring-offset-2');
       renderGallery();
     });
   });
 
-  if (loadMoreBtn) {
-    loadMoreBtn.addEventListener('click', function () {
-      currentPage += 1;
-      renderGallery();
+  function moveGallery(step) {
+    const filtered = getFilteredData();
+    if (!filtered.length) return;
+    currentIndex = (currentIndex + step + filtered.length) % filtered.length;
+    renderGallery();
+  }
+
+  if (galleryPrev) {
+    galleryPrev.addEventListener('click', function () {
+      moveGallery(-1);
     });
   }
 
-  // Lightbox elements
-  const lightbox = document.getElementById('lightbox');
-  const lbImage = document.getElementById('lightboxImage');
-  const lbTitle = document.getElementById('lightboxTitle');
-  const lbMeta = document.getElementById('lightboxMeta');
-  const lbDesc = document.getElementById('lightboxDesc');
-  const lbClose = document.getElementById('lightboxClose');
-  const lbPrev = document.getElementById('lightboxPrev');
-  const lbNext = document.getElementById('lightboxNext');
-
-  let currentIndex = -1;
-
-  function visibleItems() {
-    return Array.from(document.querySelectorAll('.gallery-item'));
+  if (galleryNext) {
+    galleryNext.addEventListener('click', function () {
+      moveGallery(1);
+    });
   }
 
-  function openLightbox(index) {
-    const all = visibleItems();
-    const el = all[index];
-    if (!el) return;
-    const img = el.querySelector('img').src;
-    lbImage.src = img;
-    lbTitle.textContent = el.getAttribute('data-title');
-    lbMeta.textContent = `${el.getAttribute('data-location')} — ${el.getAttribute('data-date')}`;
-    lbDesc.textContent = el.getAttribute('data-description');
-    currentIndex = index;
-    // save focus and show modal
-    window.__prevActiveEl = document.activeElement;
-    lightbox.classList.remove('hidden');
-    lightbox.classList.add('flex');
-    if (lbClose) lbClose.focus();
+  if (galleryViewport) {
+    galleryViewport.addEventListener('pointerdown', function (event) {
+      touchStartX = event.clientX;
+      touchStartY = event.clientY;
+      touchDeltaX = 0;
+    });
+
+    galleryViewport.addEventListener('pointermove', function (event) {
+      if (!touchStartX) return;
+      touchDeltaX = event.clientX - touchStartX;
+    });
+
+    galleryViewport.addEventListener('pointerup', function (event) {
+      const deltaY = event.clientY - touchStartY;
+      if (Math.abs(touchDeltaX) > 50 && Math.abs(touchDeltaX) > Math.abs(deltaY)) {
+        moveGallery(touchDeltaX < 0 ? 1 : -1);
+      }
+      touchStartX = 0;
+      touchStartY = 0;
+      touchDeltaX = 0;
+    });
+
+    galleryViewport.addEventListener('pointerleave', function () {
+      touchStartX = 0;
+      touchStartY = 0;
+      touchDeltaX = 0;
+    });
+
+    galleryViewport.addEventListener('touchstart', function (event) {
+      const touch = event.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchDeltaX = 0;
+    }, { passive: true });
+
+    galleryViewport.addEventListener('touchend', function (event) {
+      const touch = event.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        moveGallery(deltaX < 0 ? 1 : -1);
+      }
+      touchStartX = 0;
+      touchStartY = 0;
+      touchDeltaX = 0;
+    }, { passive: true });
   }
 
-  function closeLightbox() {
-    lightbox.classList.add('hidden');
-    lightbox.classList.remove('flex');
-    lbImage.src = '';
-    currentIndex = -1;
-    if (window.__prevActiveEl && typeof window.__prevActiveEl.focus === 'function') window.__prevActiveEl.focus();
-  }
-
-  if (lbClose) lbClose.addEventListener('click', closeLightbox);
-  if (lightbox) lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLightbox(); });
-  if (lbPrev) lbPrev.addEventListener('click', function () { if (currentIndex > 0) openLightbox(currentIndex - 1); });
-  if (lbNext) lbNext.addEventListener('click', function () { if (currentIndex < visibleItems().length - 1) openLightbox(currentIndex + 1); });
-  document.addEventListener('keydown', function (e) { if (currentIndex === -1) return; if (e.key === 'Escape') closeLightbox(); if (e.key === 'ArrowLeft') lbPrev.click(); if (e.key === 'ArrowRight') lbNext.click(); });
-
-  // Initial render
   renderGallery();
 
   // --- Contact form handling ---

@@ -48,21 +48,142 @@
 .vision-card { background: #ffffff; border-color: rgba(0,0,0,0.06); }
 .vision-card h3 { margin: 0; }
 
-/* Gallery styles */
+.gallery-carousel-shell {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gallery-slider-viewport {
+  position: relative;
+  height: 430px;
+  overflow: hidden;
+  perspective: 1400px;
+  transform-style: preserve-3d;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.gallery-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.35s ease;
+}
+
+.gallery-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(72vw, 340px);
+  height: 360px;
+  margin-left: -170px;
+  margin-top: -180px;
+  border-radius: 22px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.2);
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease;
+  will-change: transform, opacity;
+  filter: saturate(0.82) brightness(0.9);
+}
+
+.gallery-card.is-active {
+  box-shadow: 0 32px 80px rgba(0, 135, 81, 0.24);
+  filter: saturate(1.1) brightness(1);
+}
+
+.gallery-card-button {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.05) contrast(1.04);
+}
+
+.gallery-card-body {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 1rem 1rem 1.1rem;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.12), transparent);
+  color: white;
+}
+
+.gallery-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.55rem;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.14);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gallery-card-body h3 {
+  margin-top: 0.7rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.gallery-card-body p {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.gallery-nav-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.9);
+  color: var(--apm-blue);
+  font-size: 1.5rem;
+  line-height: 1;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.gallery-nav-btn:hover {
+  background: linear-gradient(135deg, var(--apm-green), var(--apm-blue));
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(0, 87, 78, 0.18);
+}
+
+.gallery-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  border: 1px dashed rgba(148, 163, 184, 0.8);
+  color: #475569;
+  border-radius: 1rem;
+  background: rgba(255,255,255,0.5);
+}
+
 .gallery-filters .filter-btn { cursor: pointer; }
-.gallery-grid .gallery-item { background: white; }
-.gallery-grid .gallery-item img { transition: transform .18s ease; }
-.gallery-grid .gallery-item button:hover img { transform: scale(1.02); }
 
 /* Lightbox tweaks */
 #lightbox { display: none; }
 #lightbox.flex { display: flex; }
 #lightboxImage { background: #f8fafc; }
-
-/* Admin form styles */
-#adminForm input, #adminForm textarea, #adminForm select { background: #fff; }
-#adminPreview img { border-radius: 6px; }
-#adminMsg { min-width: 180px; }
 
 /* Contact & volunteer modal styles */
 #contactForm input, #contactForm textarea { background: #fff; }
@@ -70,6 +191,35 @@
 #volunteerModal.flex { display: flex; }
 #volunteerModal .rounded-lg { max-height: 90vh; overflow: auto; }
 #volMsg { min-width: 180px; }
+
+@media (max-width: 640px) {
+  .gallery-carousel-shell {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .gallery-slider-viewport {
+    height: 320px;
+  }
+
+  .gallery-card {
+    width: min(72vw, 260px);
+    height: 290px;
+    margin-left: -130px;
+    margin-top: -145px;
+  }
+
+  .gallery-nav {
+    display: flex;
+    justify-content: center;
+  }
+
+  .gallery-nav-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 1.25rem;
+  }
+}
 
 /* Smooth scroll (respect user preference) */
 @media (prefers-reduced-motion: no-preference) {
